@@ -1,0 +1,2 @@
+# GreetEducation
+School Management Application
