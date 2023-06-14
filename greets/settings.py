@@ -1,4 +1,7 @@
 import os
+import pymysql
+pymysql.install_as_MySQLdb()
+
 
 BASE_DIR=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIR=os.path.join(BASE_DIR,'templates')
@@ -47,8 +50,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION='greets.wsgiapplication'
-
+WSGI_APPLICATION='greets.wsgi.application'
 
 DATABASES = {
     'default': {
