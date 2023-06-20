@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'greet',
+    'widget_tweaks',
+
 ]
 
 MIDDLEWARE = [
@@ -81,7 +84,7 @@ pymysql.install_as_MySQLdb()
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'greetsdb',
+        'NAME': 'greetdb',
         'USER': 'root',
         'PASSWORD': 'admin@123',
         'HOST': 'localhost',
