@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required,user_passes_test
 from django.conf import settings
 
 def home_view(request):
-    if request.user.is_authenticated
+    if request.user.is_authenticated:
         return HttpResponseRedirect('afterlogin')
     return render(request,'greet/index.html')
 
