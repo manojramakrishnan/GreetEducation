@@ -22,4 +22,10 @@ from django.contrib.auth.views import LoginView,LogoutView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.home_view,name=''),
+    path('adminclick',views.adminclick_view),
+    path('teacherclick',views.teacherclick_view),
+    path('studentclick',views.studentclick_view),
+    path('aboutus',views.aboutus_view),
+    path('contactus',views.contactus_view),
+    path('studentsignup',views.studentsignup_view),
 ]

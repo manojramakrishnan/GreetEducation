@@ -10,4 +10,41 @@ def home_view(request):
         return HttpResponseRedirect('afterlogin')
     return render(request,'greet/index.html')
 
+def adminclick_view(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect('afterlogin')
+    return render(request,'greet/adminclick.html')
+
+def teacherclick_view(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect('afterlogin')
+    return render(request,'greet/teacherclick.html')
+
+def studentclick_view(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect('afterlogin')
+    return render(request,'greet/studentclick.html')
+
+def aboutus_view(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect('afterlogin')
+    return render(request,'greet/aboutus.html')
+
+def contactus_view(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect('afterlogin')
+    return render(request,'greet/contactus.html')
+
+def studentsignup_view(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect('afterlogin')
+    return render(request,'greet/studentsignup.html')
+
+
+
+
+
+
+
+
 # Create your views here.
