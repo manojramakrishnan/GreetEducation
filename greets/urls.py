@@ -28,4 +28,12 @@ urlpatterns = [
     path('aboutus',views.aboutus_view),
     path('contactus',views.contactus_view),
     path('studentsignup',views.studentsignup_view),
+    path('adminsignup',views.admin_signup_view),
+    path('adminlogin',LoginView.as_view(template_name='greet/adminlogin.html')),
+    path('teachersignup',views.teacher_signup_view),
+    path('teacherlogin',LoginView.as_view(template_name='greet/teacherlogin.html')),
+    path('studentsignup',views.student_signup_view),
+    path('studentlogin',LoginView.as_view(template_name='greet/studentlogin.html'))
+
+
 ]
