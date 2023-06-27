@@ -70,9 +70,12 @@ def teacher_signup_view(request):
     return render(request,'greet/teachersignup.html',{'form':form})
 
 def student_signup_view(request):
-    form= forms.StudentSignupForm()
+    form1= forms.StudentUserForm()
+    form2 = forms.StudentExtraForm()
+    mydict={'form1':form1,'form2':form2}
     if request.method=='POST':
-        form=forms.StudentSignupForm(request.POST)
+        form1=forms.StudentUserForm(request.POST)
+        form2 = forms.StudentExtraForm(request.POST)
         if form.is_valid():
             user=form.save()
             user.set_password(user.password)

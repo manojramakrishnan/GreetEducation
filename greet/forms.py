@@ -12,7 +12,12 @@ class TeacherSignupForm(forms.ModelForm):
         model=User
         fields =['first_name','last_name','username','password']
 
-class StudentSignupForm(forms.ModelForm):
+class StudentUserForm(forms.ModelForm):
     class Meta:
         model=User
         fields =['first_name','last_name','username','password']
+
+class StudentExtraForm(forms.ModelForm):
+    class Meta:
+        model=models.StudentExtra
+        fields =['roll','cl','mobile','fee','status']
