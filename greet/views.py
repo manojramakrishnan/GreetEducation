@@ -56,18 +56,23 @@ def admin_signup_view(request):
     return render(request,'greet/adminsignup.html',{'form':form})
 
 def teacher_signup_view(request):
-    form= forms.TeacherSignupForm()
+    form1= forms.TeacherUserForm()
+    form2=forms.TeacherExtraForm()
+    mydict={'form1':form1,'form2':form2}
     if request.method=='POST':
-        form=forms.TeacherSignupForm(request.POST)
-        if form.is_valid():
-            user=form.save()
+        form1=forms.TeacherUserForm(request.POST)
+        form2 = forms.TeacherExtraForm(request.POST)
+        if form1.is_valid() and form2.is_valid():
+            user=form1.save()
             user.set_password(user.password)
             user.save()
-
+            f2 = form2.save(commit=False)
+            f2.user = user
+            user2 = f2.save()
             my_teacher_group=Group.objects.get_or_create(name='TEACHER')
             my_teacher_group[0].user_set.add(user)
-            return HttpResponseRedirect('teaherlogin')
-    return render(request,'greet/teachersignup.html',{'form':form})
+            return HttpResponseRedirect('teacherlogin')
+    return render(request,'greet/teachersignup.html',context=mydict)
 
 def student_signup_view(request):
     form1= forms.StudentUserForm()
@@ -76,15 +81,18 @@ def student_signup_view(request):
     if request.method=='POST':
         form1=forms.StudentUserForm(request.POST)
         form2 = forms.StudentExtraForm(request.POST)
-        if form.is_valid():
-            user=form.save()
+        if form1.is_valid() and form2.is_valid():
+            user=form1.save()
+
             user.set_password(user.password)
             user.save()
-
+            f2=form2.save(commit=False)
+            f2.user=user
+            user2=f2.save()
             my_student_group=Group.objects.get_or_create(name='STUDENT')
             my_student_group[0].user_set.add(user)
             return HttpResponseRedirect('studentlogin')
-    return render(request,'greet/studentsignup.html',{'form':form})
+    return render(request,'greet/studentsignup.html',context=mydict)
 
 
 

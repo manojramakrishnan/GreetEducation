@@ -7,10 +7,14 @@ class AdminSignupForm(forms.ModelForm):
         model= User
         fields =['first_name','last_name','username','password']
 
-class TeacherSignupForm(forms.ModelForm):
+class TeacherUserForm(forms.ModelForm):
     class Meta:
         model=User
         fields =['first_name','last_name','username','password']
+class TeacherExtraForm(forms.ModelForm):
+    class Meta:
+        model=models.TeacherExtra
+        fields= ['salary','mobile','status']
 
 class StudentUserForm(forms.ModelForm):
     class Meta:
