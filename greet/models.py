@@ -35,3 +35,8 @@ class TeacherExtra(models.Model):
     @property
     def get_name(self):
         return self.user.first_name + " " + self.user.last_name
+
+class Notice(models.Model):
+    date=models.DateField(auto_now=True)
+    by=models.CharField(max_length=20,null=True,default='greet')
+    message=models.CharField(max_length=500)

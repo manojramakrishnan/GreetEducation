@@ -5,6 +5,8 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required,user_passes_test
 from django.conf import settings
 from . import forms,models
+from django.core.mail import send_mail
+
 
 def home_view(request):
     if request.user.is_authenticated:
@@ -94,10 +96,57 @@ def student_signup_view(request):
             return HttpResponseRedirect('studentlogin')
     return render(request,'greet/studentsignup.html',context=mydict)
 
+def is_admin(user):
+    return user.groups.filter(name='ADMIN').exists()
+
+def is_teacher(user):
+    return user.groups.filter(name='TEACHER').exists()
+
+def is_student(user):
+    return user.groups.filter(name='STUDENT').exists()
 
 
+def afterlogin_view(request):
+    if is_admin(request.user):
+        return redirect('admin-dashboard')
+    elif is_teacher(request.user):
+        accountapprovable=models.TeacherExtra.objects.all().filter(user_id=request.user.id,status=True)
+        if accountapprovable:
+            return redirect('teacher-dashboard')
+        else:
+            return render(request,'greet/teacher_wait_for_approval.html')
+    elif is_student(request.user):
+        accountapprovable=models.StudentExtra.objects.all().filter(user_id=request.user.id,status=True)
+        if accountapprovable:
+            return redirect('student-dashboard')
+        else:
+            return render(request,'greet/student_wait_for_approval.html')
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_admin)
+def admin_dashboard_view(request):
+    teachercount=models.TeacherExtra.objects.all().filter(status=True).count()
+    pendingteachercount=models.TeacherExtra.objects.all().filter(status=False).count()
+    studentcount = models.StudentExtra.objects.all().filter(status=True).count()
+    pendingstudentcount = models.StudentExtra.objects.all().filter(status=False).count()
+    teachersalary = models.TeacherExtra.objects.all().filter(status=True).aggregate(Sum('salary'))
+    pendingteachersalary = models.TeacherExtra.objects.all().filter(status=False).aggregate(Sum('salary'))
+    studentfee = models.StudentExtra.objects.all().filter(status=True).aggregate(Sum('fee',default=0))
+    pendingstudentfee = models.StudentExtra.objects.all().filter(status=False).aggregate(Sum('fee'))
+    notice=models.Notice.objects.all()
 
 
-
+    mydict={
+        'teachercount':teachercount,
+        'pendingteachercount':pendingteachercount,
+        'studentcount':studentcount,
+        'pendingstudentcount':pendingstudentcount,
+        'teachersalary':teachersalary['salary__sum'],
+        'pendingteachersalary':pendingteachersalary['salary__sum'],
+        'studentfee':studentfee['fee__sum'],
+        'pendingstudentfee':pendingstudentfee['fee__sum'],
+        'notice':notice
+    }
+    return render(request,'greet/admin_dashboard.html',context=mydict)
 
 # Create your views here.

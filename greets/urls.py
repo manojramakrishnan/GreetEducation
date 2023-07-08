@@ -33,7 +33,9 @@ urlpatterns = [
     path('teachersignup',views.teacher_signup_view),
     path('teacherlogin',LoginView.as_view(template_name='greet/teacherlogin.html')),
     path('studentsignup',views.student_signup_view),
-    path('studentlogin',LoginView.as_view(template_name='greet/studentlogin.html'))
+    path('studentlogin',LoginView.as_view(template_name='greet/studentlogin.html')),
+    path('afterlogin',views.afterlogin_view,name='afterlogin'),
+    path('admin-dashboard',views.admin_dashboard_view,name='admin-dashboard')
 
 
 ]
