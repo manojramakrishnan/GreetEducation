@@ -150,3 +150,8 @@ def admin_dashboard_view(request):
     return render(request,'greet/admin_dashboard.html',context=mydict)
 
 # Create your views here.
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_admin)
+def admin_teacher_view(request):
+    return render(request,'greet/admin_teacher.html')
