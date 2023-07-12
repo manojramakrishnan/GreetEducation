@@ -160,3 +160,8 @@ def admin_teacher_view(request):
 @user_passes_test(is_admin)
 def admin_student_view(request):
     return render(request,'greet/admin_student.html')
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_admin)
+def admin_fee_view(request):
+    return render(request,'greet/admin_fee.html')

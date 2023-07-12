@@ -37,6 +37,8 @@ urlpatterns = [
     path('afterlogin',views.afterlogin_view,name='afterlogin'),
     path('admin-dashboard',views.admin_dashboard_view,name='admin-dashboard'),
     path('admin-teacher',views.admin_teacher_view,name='admin-teacher'),
-    path('admin-student',views.admin_student_view,name='admin-student')
+    path('admin-student',views.admin_student_view,name='admin-student'),
+    path('admin-fee',views.admin_fee_view,name='admin-fee')
+
 
 ]
