@@ -170,3 +170,8 @@ def admin_fee_view(request):
 @user_passes_test(is_admin)
 def admin_attendance_view(request):
     return render(request,'greet/admin_attendance.html')
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_admin)
+def admin_notice_view(request):
+    return render(request,'greet/admin_notice.html')
