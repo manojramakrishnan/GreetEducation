@@ -8,6 +8,7 @@ from . import forms,models
 from django.core.mail import send_mail
 
 
+
 def home_view(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect('afterlogin')
@@ -170,6 +171,32 @@ def admin_fee_view(request):
 @user_passes_test(is_admin)
 def admin_attendance_view(request):
     return render(request,'greet/admin_attendance.html')
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_admin)
+def admin_take_attendance_view(request,cl):
+    students=models.StudentExtra.objects.all().filter(cl=cl)
+    print(students)
+    aform=forms.AttendanceForm()
+    if request.method=='POST':
+        form=forms.AttendanceForm(request.POST)
+        if form.is_valid():
+            Attendances=request.POST.getlist('present_status')
+            date=form.cleaned_data['date']
+            for i in range(len(Attendances)):
+                AttendanceModel=models.Attendance()
+                AttendanceModel.cl=cl
+                AttendanceModel.date=date
+                AttendanceModel.present_status=Attendances[i]
+                AttendanceModel.role=students[i].role
+                AttendanceModel.save()
+            return redirect('admin-attendance')
+        else:
+            print('form invalid')
+    return render(request,'greet/admin_take_attendance.html',{'students':students,'aform':aform})
+
+
+
 
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)

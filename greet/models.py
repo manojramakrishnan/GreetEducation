@@ -40,3 +40,9 @@ class Notice(models.Model):
     date=models.DateField(auto_now=True)
     by=models.CharField(max_length=20,null=True,default='greet')
     message=models.CharField(max_length=500)
+
+class Attendance(models.Model):
+    role=models.CharField(max_length=10,null=True)
+    date=models.DateField()
+    cl=models.CharField(max_length=10)
+    present_status=models.CharField(max_length=10)

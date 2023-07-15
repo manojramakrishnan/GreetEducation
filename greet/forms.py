@@ -25,3 +25,8 @@ class StudentExtraForm(forms.ModelForm):
     class Meta:
         model=models.StudentExtra
         fields =['roll','cl','mobile','fee','status']
+
+presence_choices=(('Present','Present'),('Absent','Absent'))
+class AttendanceForm(forms.Form):
+    present_status=forms.ChoiceField(choices=presence_choices)
+    date=forms.DateField
