@@ -202,3 +202,10 @@ def admin_take_attendance_view(request,cl):
 @user_passes_test(is_admin)
 def admin_notice_view(request):
     return render(request,'greet/admin_notice.html')
+
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_admin)
+def admin_view_teacher_view(request):
+    teachers = models.TeacherExtra.objects.all().filter(status=True)
+    return render(request, 'greet/admin_view_teacher.html',{'teachers':teachers})
