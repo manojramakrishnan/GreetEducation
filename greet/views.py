@@ -209,3 +209,26 @@ def admin_notice_view(request):
 def admin_view_teacher_view(request):
     teachers = models.TeacherExtra.objects.all().filter(status=True)
     return render(request, 'greet/admin_view_teacher.html',{'teachers':teachers})
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_admin)
+def admin_add_teacher_view(request):
+    form1 = forms.TeacherExtraForm()
+    form2 = forms.TeacherExtraForm()
+    mydict = {'form1': form1, 'form2': form2}
+    if request.method == 'POST':
+        form1 = forms.TeacherExtraForm(request.POST)
+        form2 = forms.TeacherExtraForm(request.POST)
+        if form1.is_valid() and form2.is_valid():
+            user = form1.save()
+
+            user.set_password(user.password)
+            user.save()
+            f2 = form2.save(commit=False)
+            f2.user = user
+            user2 = f2.save()
+            my_teacher_group = Group.objects.get_or_create(name='TEACHER')
+            my_teacher_group[0].user_set.add(user)
+            return HttpResponseRedirect('admin-teacher')
+    return render(request, 'greet/admin_add_teacher.html', context=mydict)
+
