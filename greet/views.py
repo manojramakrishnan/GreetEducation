@@ -238,3 +238,10 @@ def admin_add_teacher_view(request):
 def admin_approve_teacher_view(request):
     teachers = models.TeacherExtra.objects.all().filter(status=False)
     return render(request, 'greet/admin_approve_teacher.html', {'teachers': teachers})
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_admin)
+def admin_view_teacher_salary_view(request):
+    teachers = models.TeacherExtra.objects.all()
+    return render(request, 'greet/admin_view_teacher_salary.html', {'teachers': teachers})
+
