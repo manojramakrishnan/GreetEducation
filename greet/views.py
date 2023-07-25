@@ -251,3 +251,25 @@ def admin_view_teacher_salary_view(request):
 def admin_view_student_view(request):
     students = models.StudentExtra.objects.all().filter(status=True)
     return render(request, 'greet/admin_view_student.html',{'students':students})
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_admin)
+def admin_add_student_view(request):
+    form1 = forms.StudentUserForm()
+    form2 = forms.StudentExtraForm()
+    mydict = {'form1': form1, 'form2': form2}
+    if request.method == 'POST':
+        form1 = forms.StudentUserForm(request.POST)
+        form2 = forms.StudentExtraForm(request.POST)
+        if form1.is_valid() and form2.is_valid():
+            user = form1.save()
+
+            user.set_password(user.password)
+            user.save()
+            f2 = form2.save(commit=False)
+            f2.user = user
+            user2 = f2.save()
+            my_student_group = Group.objects.get_or_create(name='STUDENT')
+            my_student_group[0].user_set.add(user)
+            return HttpResponseRedirect('admin-student')
+    return render(request, 'greet/admin_add_student.html', context=mydict)
