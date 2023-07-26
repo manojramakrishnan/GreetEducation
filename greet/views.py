@@ -213,11 +213,11 @@ def admin_view_teacher_view(request):
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)
 def admin_add_teacher_view(request):
-    form1 = forms.TeacherExtraForm()
+    form1 = forms.TeacherUserForm()
     form2 = forms.TeacherExtraForm()
     mydict = {'form1': form1, 'form2': form2}
     if request.method == 'POST':
-        form1 = forms.TeacherExtraForm(request.POST)
+        form1 = forms.TeacherUserForm(request.POST)
         form2 = forms.TeacherExtraForm(request.POST)
         if form1.is_valid() and form2.is_valid():
             user = form1.save()
@@ -273,3 +273,10 @@ def admin_add_student_view(request):
             my_student_group[0].user_set.add(user)
             return HttpResponseRedirect('admin-student')
     return render(request, 'greet/admin_add_student.html', context=mydict)
+
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_admin)
+def admin_approve_student_view(request):
+    students = models.StudentExtra.objects.all().filter(status=False)
+    return render(request, 'greet/admin_approve_student.html', {'students': students})

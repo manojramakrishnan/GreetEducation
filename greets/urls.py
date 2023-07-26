@@ -48,5 +48,6 @@ urlpatterns = [
     path('admin-view-teacher-salary', views.admin_view_teacher_salary_view, name='admin-view-teacher-salary'),
     path('admin-view-student', views.admin_view_student_view, name='admin-view-student'),
     path('admin-add-student', views.admin_add_student_view, name='admin-add-student'),
+    path('admin-approve-student', views.admin_approve_student_view, name='admin-approve-student'),
 
 ]
