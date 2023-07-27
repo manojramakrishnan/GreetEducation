@@ -280,3 +280,9 @@ def admin_add_student_view(request):
 def admin_approve_student_view(request):
     students = models.StudentExtra.objects.all().filter(status=False)
     return render(request, 'greet/admin_approve_student.html', {'students': students})
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_admin)
+def admin_view_student_fee_view(request):
+    students = models.StudentExtra.objects.all()
+    return render(request, 'greet/admin_view_student_fee.html', {'students': students})
