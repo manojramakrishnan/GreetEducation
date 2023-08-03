@@ -169,6 +169,13 @@ def admin_fee_view(request):
 
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)
+def admin_view_fee_view(request,cl):
+    feedetails=models.StudentExtra.objects.all().filter(cl=cl)
+    return render(request,'greet/admin_view_fee.html',{'feedetails':feedetails,'cl':cl})
+
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_admin)
 def admin_attendance_view(request):
     return render(request,'greet/admin_attendance.html')
 
@@ -195,13 +202,35 @@ def admin_take_attendance_view(request,cl):
             print('form invalid')
     return render(request,'greet/admin_take_attendance.html',{'students':students,'aform':aform})
 
-
+@login_required(login_url='adminlogin')
+@user_passes_test(is_admin)
+def admin_view_attendance_view(request,cl):
+    form=forms.AskDateForm()
+    if request.method=='POST':
+        form=forms.AskDateForm(request.POST)
+        if form.is_valid():
+            date=form.cleaned_data['date']
+            attendancedata=models.Attendance.objects.all().filter(date=date,cl=cl)
+            studentdata=models.StudentExtra.objects.all().filter(cl=cl)
+            mylist=zip(attendancedata,studentdata)
+            return render(request,'greet/admin_view_attendance_page.html',{'cl':cl,'mylist':mylist,'date':date})
+        else:
+            print('form invalid')
+    return render(request,'greet/admin_view_attendance_ask_date.html',{'cl':cl,'form':form})
 
 
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)
 def admin_notice_view(request):
-    return render(request,'greet/admin_notice.html')
+    form=forms.NoticeForm()
+    if request.method=='POST':
+        form=forms.NoticeForm(request.POST)
+        if form.is_valid():
+            form=form.save(commit=False)
+            form.by=request.user.first_name
+            form.save()
+            return redirect('admin-dashboard')
+    return render(request,'greet/admin_notice.html',{'form':form})
 
 
 @login_required(login_url='adminlogin')
