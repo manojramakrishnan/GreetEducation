@@ -239,6 +239,8 @@ def admin_view_teacher_view(request):
     teachers = models.TeacherExtra.objects.all().filter(status=True)
     return render(request, 'greet/admin_view_teacher.html',{'teachers':teachers})
 
+
+
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)
 def admin_add_teacher_view(request):
@@ -267,6 +269,23 @@ def admin_add_teacher_view(request):
 def admin_approve_teacher_view(request):
     teachers = models.TeacherExtra.objects.all().filter(status=False)
     return render(request, 'greet/admin_approve_teacher.html', {'teachers': teachers})
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_admin)
+def approve_teacher_view(request,pk):
+    teacher=models.TeacherExtra.objects.get(id=pk)
+    teacher.status=True
+    teacher.save()
+    return redirect(reverse('admin-approve-teacher'))
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_admin)
+def delete_teacher_view(request,pk):
+    teacher=models.TeacherExtra.objects.get(id=pk)
+    user=models.User.objects.get(id=teacher.user_id)
+    user.delete()
+    teacher.delete()
+    return redirect('admin-approve-teacher')
 
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)

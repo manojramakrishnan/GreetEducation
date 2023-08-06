@@ -29,9 +29,11 @@ class StudentExtraForm(forms.ModelForm):
 presence_choices=(('Present','Present'),('Absent','Absent'))
 class AttendanceForm(forms.Form):
     present_status=forms.ChoiceField(choices=presence_choices)
-    date=forms.DateField
+    date=forms.DateField()
 
 class NoticeForm(forms.ModelForm):
     class Meta:
         model=models.Notice
         fields='__all__'
+class AskDateForm(forms.Form):
+    date=forms.DateField()
