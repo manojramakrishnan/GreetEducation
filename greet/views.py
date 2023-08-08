@@ -263,6 +263,30 @@ def admin_add_teacher_view(request):
             return HttpResponseRedirect('admin-teacher')
     return render(request, 'greet/admin_add_teacher.html', context=mydict)
 
+@login_required(login_url='adminlogin')
+@user_passes_test(is_admin)
+def update_teacher_view(request,pk):
+    teacher=models.TeacherExtra.objects.get(id=pk)
+    user=models.User.objects.get(id=teacher.user_id)
+
+    form1=forms.TeacherUserForm(instance=user)
+    form2=forms.TeacherExtraForm(instance=teacher)
+    mydict={'form1':form1,'form2':form2}
+
+    if request.method=='POST':
+        form1=forms.TeacherUserForm(request.POST,instance=user)
+        form2=forms.TeacherExtraForm(request.POST,instance=teacher)
+        print(form1)
+        if form1.is_valid() and form2.is_valid():
+            user=form1.save()
+            user.set_password(user.password)
+            user.save()
+            f2=form2.save(commit=False)
+            f2.status=True
+            f2.save()
+            return redirect('admin-view-teacher')
+    return render(request,'school/admin_update_teacher.html',context=mydict)
+
 
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)

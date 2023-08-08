@@ -45,6 +45,7 @@ urlpatterns = [
     path('admin-take-attendance/<str:cl>',views.admin_take_attendance_view,name='admin-take-attendance'),
     path('admin-notice', views.admin_notice_view, name='admin-notice'),
     path('admin-view-teacher', views.admin_view_teacher_view, name='admin-view-teacher'),
+    path('update-teacher/<int:pk>', views.update_teacher_view, name='update-teacher'),
     path('admin-add-teacher', views.admin_add_teacher_view, name='admin-add-teacher'),
     path('admin-approve-teacher', views.admin_approve_teacher_view, name='admin-approve-teacher'),
     path('approve-teacher/<int:pk>',views.approve_teacher_view,name='approve-teacher'),
