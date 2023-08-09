@@ -358,3 +358,23 @@ def admin_approve_student_view(request):
 def admin_view_student_fee_view(request):
     students = models.StudentExtra.objects.all()
     return render(request, 'greet/admin_view_student_fee.html', {'students': students})
+
+@login_required(login_url='teacherlogin')
+@user_passes_test(is_teacher)
+def teacher_dashboard_view(request):
+    studentcount = models.StudentExtra.objects.all().filter(status=True).count()
+    viewallstudent=models.StudentExtra.objects.all().filter(status=True).count()
+    addstudent=models.StudentExtra.objects.all().filter(status=False).count()
+    approvestudent = models.StudentExtra.objects.all().filter(status=True).count()
+    viewstudentfee = models.StudentExtra.objects.all().filter(status=True).aggregate(Sum('fee',default=0))
+
+
+    mydict={
+        'studentcount':studentcount,
+        'viewallstudent':viewallstudent,
+        'addstudent':addstudent,
+        'approvestudent':approvestudent,
+        'viewstudentfee':viewstudentfee['fee__sum'],
+    }
+    return render(request,'greet/teacher_dashboard.html',context=mydict)
+

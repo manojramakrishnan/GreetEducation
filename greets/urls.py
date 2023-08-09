@@ -56,5 +56,6 @@ urlpatterns = [
     path('admin-approve-student', views.admin_approve_student_view, name='admin-approve-student'),
     path('admin-view-student-fee', views.admin_view_student_fee_view, name='admin-view-student-fee'),
     path('logout', LogoutView.as_view(template_name='greet/index.html'),name='logout'),
+    path('teacher-dashboard', views.teacher_dashboard_view, name='teacher-dashboard'),
 
 ]
