@@ -285,7 +285,18 @@ def update_teacher_view(request,pk):
             f2.status=True
             f2.save()
             return redirect('admin-view-teacher')
-    return render(request,'school/admin_update_teacher.html',context=mydict)
+    return render(request,'greet/admin_update_teacher.html',context=mydict)
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_admin)
+def delete_teacher_from_school_view(request,pk):
+    teacher=models.TeacherExtra.objects.get(id=pk)
+    user=models.User.objects.get(id=teacher.user_id)
+    user.delete()
+    teacher.delete()
+    return redirect('admin_view_teacher')
+
+
 
 
 @login_required(login_url='adminlogin')
@@ -362,19 +373,13 @@ def admin_view_student_fee_view(request):
 @login_required(login_url='teacherlogin')
 @user_passes_test(is_teacher)
 def teacher_dashboard_view(request):
-    studentcount = models.StudentExtra.objects.all().filter(status=True).count()
-    viewallstudent=models.StudentExtra.objects.all().filter(status=True).count()
-    addstudent=models.StudentExtra.objects.all().filter(status=False).count()
-    approvestudent = models.StudentExtra.objects.all().filter(status=True).count()
-    viewstudentfee = models.StudentExtra.objects.all().filter(status=True).aggregate(Sum('fee',default=0))
-
-
-    mydict={
-        'studentcount':studentcount,
-        'viewallstudent':viewallstudent,
-        'addstudent':addstudent,
-        'approvestudent':approvestudent,
-        'viewstudentfee':viewstudentfee['fee__sum'],
-    }
-    return render(request,'greet/teacher_dashboard.html',context=mydict)
+   teacherdata=models.TeacherExtra.objects.all().filter(status=True,user_id=request.user.id)
+   notice=models.Notice.objects.all()
+   mydict={
+       'salary':teacherdata[0].salary,
+       'mobile':teacherdata[0].mobile,
+       'date':teacherdata[0].joindate,
+       'notice':notice
+          }
+   return render(request,'greet/teacher_dashboard.html',context=mydict)
 
