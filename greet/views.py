@@ -383,3 +383,8 @@ def teacher_dashboard_view(request):
           }
    return render(request,'greet/teacher_dashboard.html',context=mydict)
 
+@login_required(login_url='teacherlogin')
+@user_passes_test(is_teacher)
+def teacher_attendance_view(request):
+   return render(request,'greet/teacher_attendance.html')
+
