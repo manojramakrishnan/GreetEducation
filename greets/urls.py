@@ -60,5 +60,5 @@ urlpatterns = [
     path('logout', LogoutView.as_view(template_name='greet/index.html'),name='logout'),
     path('teacher-dashboard', views.teacher_dashboard_view, name='teacher-dashboard'),
     path('teacher-attendance', views.teacher_attendance_view, name='teacher-attendance'),
-
+    path('teacher-notice', views.teacher_notice_view, name='teacher-notice'),
 ]
