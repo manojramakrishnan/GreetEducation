@@ -366,6 +366,15 @@ def admin_approve_student_view(request):
 
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)
+def approve_student_view(request,pk):
+    students = models.StudentExtra.objects.get(id=pk)
+    students.status = True
+    students.save()
+    return redirect(reverse('admin-approve-student'))
+
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_admin)
 def admin_view_student_fee_view(request):
     students = models.StudentExtra.objects.all()
     return render(request, 'greet/admin_view_student_fee.html', {'students': students})
