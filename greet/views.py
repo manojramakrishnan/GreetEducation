@@ -39,11 +39,26 @@ def contactus_view(request):
         return HttpResponseRedirect('afterlogin')
     return render(request,'greet/contactus.html')
 
-def studentsignup_view(request):
-    if request.user.is_authenticated:
-        return HttpResponseRedirect('afterlogin')
-    return render(request,'greet/studentsignup.html')
+def student_signup_view(request):
+    form1 = forms.StudentUserForm()
+    form2 = forms.StudentExtraForm()
+    mydict = {'form1': form1, 'form2': form2}
+    if request.method == 'POST':
+        form1 = forms.StudentUserForm(request.POST)
+        form2 = forms.StudentExtraForm(request.POST)
+        if form1.is_valid() and form2.is_valid():
+            user = form1.save()
+            user.set_password(user.password)
+            user.save()
+            f2 = form2.save(commit=False)
+            f2.user = user
+            user2 = f2.save()
 
+            my_student_group = Group.objects.get_or_create(name='STUDENT')
+            my_student_group[0].user_set.add(user)
+
+        return HttpResponseRedirect('studentlogin')
+    return render(request, 'school/studentsignup.html', context=mydict)
 def admin_signup_view(request):
     form= forms.AdminSignupForm()
     if request.method=='POST':
@@ -372,6 +387,14 @@ def approve_student_view(request,pk):
     students.save()
     return redirect(reverse('admin-approve-student'))
 
+@login_required(login_url='adminlogin')
+@user_passes_test(is_admin)
+def delete_student_view(request,pk):
+    student=models.StudentExtra.objects.get(id=pk)
+    user=models.User.objects.get(id=student.user_id)
+    user.delete()
+    student.delete()
+    return redirect('admin-approve-student')
 
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)
@@ -397,7 +420,43 @@ def teacher_dashboard_view(request):
 def teacher_attendance_view(request):
    return render(request,'greet/teacher_attendance.html')
 
+@login_required(login_url='teacherlogin')
+@user_passes_test(is_teacher)
+def teacher_take_attendance_view(request,cl):
+    students=models.StudentExtra.objects.all().filter(cl=cl)
+    aform=forms.AttendanceForm()
+    if request.method=='POST':
+        form=forms.AttendanceForm(request.POST)
+        if form.is_valid():
+            Attendances=request.POST.getlist('present_status')
+            date=form.cleaned_data['date']
+            for i in range(len(Attendances)):
+                AttendanceModel=models.Attendance()
+                AttendanceModel.cl=cl
+                AttendanceModel.date=date
+                AttendanceModel.present_status=Attendances[i]
+                AttendanceModel.role=students[i].roll
+                AttendanceModel.save()
+            return redirect('teacher-attendance')
+        else:
+            print('form invalid')
+    return render(request,'greet/teacher_take_attendance.html',{'students':students,'aform':aform})
 
+@login_required(login_url='teacherlogin')
+@user_passes_test(is_teacher)
+def teacher_view_attendance_view(request,cl):
+    form=forms.AskDateForm()
+    if request.method=='POST':
+        form=forms.AskDateForm(request.POST)
+        if form.is_valid():
+            date=form.cleaned_data['date']
+            attendancedata=models.Attendance.objects.all().filter(date=date,cl=cl)
+            studentdata=models.StudentExtra.objects.all().filter(cl=cl)
+            mylist=zip(attendancedata,studentdata)
+            return render(request,'greet/teacher_view_attendance_page.html',{'cl':cl,'mylist':mylist,'date':date})
+        else:
+            print('form invalid')
+    return render(request,'greet/teacher_view_attendance_ask_date.html',{'cl':cl,'form':form})
 @login_required(login_url='teacherlogin')
 @user_passes_test(is_teacher)
 def teacher_notice_view(request):
@@ -413,3 +472,15 @@ def teacher_notice_view(request):
             print('form invalid')
     return render(request, 'greet/teacher_notice.html', {'form': form})
 
+@login_required(login_url='studentlogin')
+@user_passes_test(is_student)
+def student_dashboard_view(request):
+    studentdata = models.StudentExtra.objects.all().filter(status=True, user_id=request.user.id)
+    notice = models.Notice.objects.all()
+    mydict = {
+        'roll': studentdata[0].roll,
+        'mobile': studentdata[0].mobile,
+        'fee': studentdata[0].fee,
+        'notice': notice
+            }
+    return render(request, 'greet/student_dashboard.html', context=mydict)
