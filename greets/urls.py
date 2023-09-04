@@ -65,5 +65,5 @@ urlpatterns = [
     path('teacher-view-attendance/<str:cl',views.teacher_view_attendance_view,name='teacher-view-attendance'),
     path('teacher-notice', views.teacher_notice_view, name='teacher-notice'),
     path('student-dashboard', views.student_dashboard_view, name='student-dashboard'),
-
+    path('student-attendance', views.student_attendance_view, name='student-attendance'),
 ]

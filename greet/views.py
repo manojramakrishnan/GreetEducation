@@ -484,3 +484,20 @@ def student_dashboard_view(request):
         'notice': notice
             }
     return render(request, 'greet/student_dashboard.html', context=mydict)
+
+
+@login_required(login_url='studentlogin')
+@user_passes_test(is_student)
+def student_attendance_view(request):
+    form=forms.AskDateForm()
+    if request.method=='POST':
+        form=forms.AskDateForm(request.POST)
+        if form.is_valid():
+            date=form.cleaned_data['date']
+            studentdata=models.StudentExtra.objects.all().filter(user_id=request.user.id,status=True)
+            attendancedata=models.Attendance.objects.all().filter(date=date,cl=studentdata[0].cl,roll=studentdata[0].roll)
+            mylist=zip(attendancedata,studentdata)
+            return render(request,'school/student_view_attendance_page.html',{'mylist':mylist,'date':date})
+        else:
+            print('form invalid')
+    return render(request,'school/student_view_attendance_ask_date.html',{'form':form})
