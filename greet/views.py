@@ -500,4 +500,4 @@ def student_attendance_view(request):
             return render(request,'school/student_view_attendance_page.html',{'mylist':mylist,'date':date})
         else:
             print('form invalid')
-    return render(request,'school/student_view_attendance_ask_date.html',{'form':form})
+    return render(request,'greet/student_view_attendance_ask_date.html',{'form':form})
